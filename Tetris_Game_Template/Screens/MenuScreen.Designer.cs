@@ -31,7 +31,6 @@
             this.exitButton = new System.Windows.Forms.Button();
             this.playButton = new System.Windows.Forms.Button();
             this.menuTitle = new System.Windows.Forms.Label();
-            this.scoresButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // exitButton
@@ -41,9 +40,10 @@
             this.exitButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(129, 317);
+            this.exitButton.Location = new System.Drawing.Point(345, 373);
+            this.exitButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(180, 60);
+            this.exitButton.Size = new System.Drawing.Size(160, 48);
             this.exitButton.TabIndex = 3;
             this.exitButton.Text = "Exit";
             this.exitButton.UseVisualStyleBackColor = false;
@@ -56,9 +56,10 @@
             this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.playButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.playButton.Location = new System.Drawing.Point(129, 143);
+            this.playButton.Location = new System.Drawing.Point(345, 269);
+            this.playButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(180, 60);
+            this.playButton.Size = new System.Drawing.Size(160, 48);
             this.playButton.TabIndex = 1;
             this.playButton.Tag = "GameScreen";
             this.playButton.Text = "Play";
@@ -68,43 +69,26 @@
             // 
             // menuTitle
             // 
-            this.menuTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.menuTitle.ForeColor = System.Drawing.Color.White;
-            this.menuTitle.Location = new System.Drawing.Point(135, 52);
+            this.menuTitle.Font = new System.Drawing.Font("Perpetua Titling MT", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuTitle.ForeColor = System.Drawing.Color.Black;
+            this.menuTitle.Location = new System.Drawing.Point(350, 200);
             this.menuTitle.Name = "menuTitle";
-            this.menuTitle.Size = new System.Drawing.Size(174, 51);
+            this.menuTitle.Size = new System.Drawing.Size(155, 41);
             this.menuTitle.TabIndex = 11;
-            this.menuTitle.Text = "Main Menu";
+            this.menuTitle.Text = "Tetris";
             this.menuTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // scoresButton
-            // 
-            this.scoresButton.BackColor = System.Drawing.Color.White;
-            this.scoresButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.scoresButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
-            this.scoresButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.scoresButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scoresButton.Location = new System.Drawing.Point(129, 228);
-            this.scoresButton.Name = "scoresButton";
-            this.scoresButton.Size = new System.Drawing.Size(180, 60);
-            this.scoresButton.TabIndex = 2;
-            this.scoresButton.Text = "High Scores";
-            this.scoresButton.UseVisualStyleBackColor = false;
-            this.scoresButton.Click += new System.EventHandler(this.scoresButton_Click);
-            this.scoresButton.Enter += new System.EventHandler(this.button_Enter);
             // 
             // MenuScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.DarkRed;
-            this.Controls.Add(this.scoresButton);
+            this.BackColor = System.Drawing.Color.Silver;
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.menuTitle);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MenuScreen";
-            this.Size = new System.Drawing.Size(441, 406);
+            this.Size = new System.Drawing.Size(857, 588);
             this.ResumeLayout(false);
 
         }
@@ -114,6 +98,5 @@
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Label menuTitle;
-        private System.Windows.Forms.Button scoresButton;
     }
 }

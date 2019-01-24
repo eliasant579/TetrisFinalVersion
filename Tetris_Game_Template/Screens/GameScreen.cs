@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 using GameSystemServices;
 
 namespace Tetris_Game_Template
@@ -24,6 +25,10 @@ namespace Tetris_Game_Template
         Color shapeColor;
         bool tempCollision = false;
 
+        SoundPlayer rowDeletedPlayer = new SoundPlayer(Properties.Resources.rowDeleted);
+        //SoundPlayer shapeStopPlayer = new SoundPlayer(Properties.Resources.shapeStop); I removed it because latency
+        SoundPlayer gameOverPlayer = new SoundPlayer(Properties.Resources.gameOver);
+
         //random generator used to get a new shape in NewShape
         Random shapeRandom = new Random();
 
@@ -33,8 +38,6 @@ namespace Tetris_Game_Template
 
         //point that to which the shape method referes to when defining the coordinates of the square in the tetragram
         Point shapeFondPoint;
-
-        //I want to prove that I can include the little bump at the beginning! I'll fit the first counterClick block in the key down method, and I'll refresh
 
         //these booleans make the program run better, I get it :)
         Boolean leftArrowDown, downArrowDown, rightArrowDown, upArrowDown;
@@ -121,16 +124,16 @@ namespace Tetris_Game_Template
             //player 1 button presses
             switch (e.KeyCode)
             {
-                case Keys.B:
+                case Keys.Left:
                     leftArrowDown = true;
                     break;
-                case Keys.Space:
+                case Keys.Down:
                     downArrowDown = true;
                     break;
-                case Keys.M:
+                case Keys.Right:
                     rightArrowDown = true;
                     break;
-                case Keys.N:
+                case Keys.Up:
                     upArrowDown = true;
                     break;
             }
@@ -144,25 +147,23 @@ namespace Tetris_Game_Template
             //player 1 button releases
             switch (e.KeyCode)
             {
-                case Keys.B:
+                case Keys.Left:
                     leftArrowDown = false;
                     break;
-                case Keys.Space:
+                case Keys.Down:
                     downArrowDown = false;
                     break;
-                case Keys.M:
+                case Keys.Right:
                     rightArrowDown = false;
                     break;
-                case Keys.N:
+                case Keys.Up:
                     upArrowDown = false;
                     break;
             }
         }
 
         /// <summary>
-        /// This is the Game Engine and repeats on each interval of the timer. For example
-        /// if the interval is set to 16 then it will run each 16ms or approx. 50 times
-        /// per second
+        /// Reads keys input and refreshes every 80ms
         /// </summary>
         private void gameTimer_Tick(object sender, EventArgs e)
         {
@@ -209,40 +210,49 @@ namespace Tetris_Game_Template
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //this block of functions rappresents the major problem. It's kinda messy
+            //this block of functions rappresents the major problem when forced
             {
+                //determine where the shape is according to the next movement
                 ShapeImplement(tempPos);
+                //check for collisions and eventually change shape coordinates and/or position
                 CollisionCheck();
+                //determine where the shape will be draw avoiding collisions
                 ShapeImplement(startPos);
+                //check if there are completed rows and delete them
                 DeleteRows();
             }
 
-            //set the color to the cells belonging to the defined new shape
+            //set the colors to the cells belonging to the previously defined shape
             for (int j = 0; j < 4; j++)
             {
                 squareColor[nextShapeCoords[j].X, nextShapeCoords[j].Y] = shapeColor;
                 pastShapeCoords[j] = nextShapeCoords[j];
             }
 
+            //draw a big black rectangle that will serve as a frame for the game
             drawBrush.Color = Color.Black;
             e.Graphics.FillRectangle(drawBrush, squareOrigin[0, 0].X, squareOrigin[0, 0].Y, 251, 419);
 
-            //drawing process happens here
+            //drawing process happens here: grab the color of the i j square and draw at the correct screen coordinates
             for (int i = 1; i < 11; i++)
             {
                 for (int j = 1; j < 19; j++)
                 {
                     drawBrush.Color = squareColor[i, j];        //brush's color is set to the color of the cell you are drawing
-                    e.Graphics.FillRectangle(drawBrush, squareOrigin[i, j].X, squareOrigin[i, j].Y, 20, 20);
+                    e.Graphics.FillRectangle(drawBrush, squareOrigin[i, j].X, squareOrigin[i, j].Y, 20, 20); //the square position is defined and that square is coloured
                 }
             }
 
+            //refreshing labels
             scoreLabel.Text = "Score: " + score;
             levelLabel.Text = "Level: " + level;
             nextShapeLabel.Text = "Next shape \n" + nextShape;
 
+            //if game is over draw some text
             if(gameTimer.Enabled == false)
             {
+                gameOverPlayer.PlaySync();
+
                 drawBrush.Color = Color.White;
                 Brush gameOverBrush = new SolidBrush(Color.Black);
                 Font gameOverFont = new Font("Arial", 16, FontStyle.Bold);
@@ -255,34 +265,42 @@ namespace Tetris_Game_Template
             }
         }
 
+
+        /// <summary>
+        /// Check collisions with squares that have a color different that white and choose if game should continue, new shape should be generated or game is over
+        /// </summary>
         public void CollisionCheck()
         {
             bool collisionValue = false;
 
-            //last shape is erased
+            //last shape is erased so it's not interfering
             for (int j = 0; j < 4; j++)
             {
                 squareColor[pastShapeCoords[j].X, pastShapeCoords[j].Y] = Color.White;
             }
 
-            //position of the shape and collision check
+            //each square of the next shape is checked
             for (int i = 0; i < 4; i++)
             {
                 Point tempCoord = nextShapeCoords[i];
 
+                //if out of boundaries draw the shape again but in the old spot
                 if (tempCoord.X < 1 || tempCoord.X > 10)
                 {
                     shapeFondPoint = pastShapeCoords[0];
                 }
 
+                //chack if any of the squares intersect with a not white square
                 else if (squareColor[tempCoord.X, tempCoord.Y] != Color.White)
                 {
+                    //if collision happens at the very top of the screen
                     if (shapeFondPoint.Y == 2)
                     {
                         //game over
                         gameTimer.Enabled = false;                      
                     }
 
+                    //if shape is falling
                     if (tempCoord.Y > pastShapeCoords[i].Y)
                     {
                         collisionValue = true;
@@ -294,6 +312,7 @@ namespace Tetris_Game_Template
                 }
             }
 
+            //collisions applied to rotations
             if (collisionValue == false)
             {
                 startPos = tempPos;
@@ -313,6 +332,9 @@ namespace Tetris_Game_Template
                     {
                         squareColor[pastShapeCoords[j].X, pastShapeCoords[j].Y] = shapeColor;
                     }
+
+                    //shapeStopPlayer.Play();
+
                     shape = nextShape;
                     nextShape = NewShape(shape);
                     collisionValue = false;
@@ -320,6 +342,9 @@ namespace Tetris_Game_Template
             }
         }
 
+        /// <summary>
+        /// Check if any row is completed and, if so, delete it
+        /// </summary>
         public void DeleteRows()
         {
             bool rowCompleted;
@@ -366,10 +391,18 @@ namespace Tetris_Game_Template
                             levelFallFreq--;
                         }
                     }
+
+                    rowDeletedPlayer.Play();
+
                 }
             }
         }
 
+        /// <summary>
+        /// Pick a pseudo-random shape
+        /// </summary>
+        /// <param name="lastShape">The shape used on the screen</param>
+        /// <returns></returns>
         public char NewShape(char lastShape)
         {
             shapeFondPoint = new Point(5, 1);
@@ -445,6 +478,10 @@ namespace Tetris_Game_Template
             }
         }
 
+        /// <summary>
+        /// Based on the shape and the position get the sqaures that the shape will occupy in the temporary array
+        /// </summary>
+        /// <param name="position"></param>
         public void ShapeImplement(int position)
         {
             switch (shape)

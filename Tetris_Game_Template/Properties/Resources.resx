@@ -457,4 +457,10 @@
         fz7ju2+P4v8c38jo1+9/APIZj050VkQ/AAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="gameOver" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\31.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="rowDeleted" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\02.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
